@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>closelab 的简陋观影室</title>
+    <style>
+        progress {
+            width: 100%;
+            height: 5px;
+            background-color: #eee;
+        }
+
+        progress::-webkit-progress-value {
+            background-color: #4caf50;
+        }
+
+        progress::-moz-progress-bar {
+            background-color: #4caf50;
+        }
+
+        video {
+            margin-left: 280px;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="width: 400px">
+        <h1>视频小地方</h1>
+        <p>选择你想看的视频</p>
+    </div>
+    <br>
+
+    <button id="but1">菜就多练</button>
+    <button id="but2">哥布林的幻想</button>
+    <button id="but3">这豆角真老</button>
+    <br>
+    <video id="myVideo" width="70%" height="70%" autoplay loop controls>
+        <source id="source">
+    </video>
+    <br>
+    <button id="playPause">播放/暂停</button>
+    <button id="goBack5">快退</button>
+    <button id="goBack-5">快进</button>
+    <button id="volumeUp">音量+</button>
+    <button id="volumeDown">音量-</button>
+    <button id="toggleMute">静音</button>
+    <progress id="videoProgress" value="0" max="100"></progress>
+    <input type="range" min="0" max="100" value="0" id="customProgress">
+    <script>
+        var myVideo = document.getElementById('myVideo');
+        var playPauseButton = document.getElementById('playPause');
+        var videoProgress = document.getElementById('videoProgress');
+//播放与暂停
+        playPauseButton.addEventListener('click', function () {
+            if (myVideo.paused) {
+                myVideo.play();
+                playPauseButton.innerHTML = '暂停';
+            } else {
+                myVideo.pause();
+                playPauseButton.innerHTML = '播放';
+            }
+        });
+//退五秒
+        document.getElementById('goBack5').addEventListener('click', function () {
+            myVideo.currentTime -= 5;
+        });
+//进五秒
+        document.getElementById('goBack-5').addEventListener('click', function () {
+            myVideo.currentTime += 5;
+        });
+//限制音量
+        function adjustVolume(amount) {
+            myVideo.volume += amount;
+            if (myVideo.volume > 1) myVideo.volume = 1;
+            if (myVideo.volume < 0) myVideo.volume = 0;
+        }
+//增加音量
+        document.getElementById('volumeUp').addEventListener('click', function () {
+            adjustVolume(0.1);
+        });
+//减少音量
+        document.getElementById('volumeDown').addEventListener('click', function () {
+            adjustVolume(-0.1);
+        });
+//静音和取消静音
+        document.getElementById('toggleMute').addEventListener('click', function () {
+            myVideo.muted =!myVideo.muted;
+            this.innerHTML = myVideo.muted? '取消静音' : '静音';
+        });
+//获取视频
+        document.getElementById('but1').addEventListener('click', function () {
+            document.getElementById('source').src = "菜就多练，但是逻辑推理.mp4";
+            myVideo.load();
+        });
+
+        document.getElementById('but2').addEventListener('click', function () {
+            document.getElementById('source').src = "老师....你投屏没关.mp4";
+            myVideo.load();
+        });
+
+        document.getElementById('but3').addEventListener('click', function () {
+            document.getElementById('source').src = "这豆太棒了！！！！.mp4";
+            myVideo.load();
+        });
+
+// 更新进度条
+        myVideo.addEventListener('timeupdate', function () {
+            var percentage = (myVideo.currentTime / myVideo.duration) * 100;
+            videoProgress.value = percentage;
+        });
+customProgress.addEventListener('input',function(){
+    const seektime=(this.value/100)*myVideo.duration;
+    myVideo.currentTime=seektime;
+});
+    </script>
+</body>
+
+</html>
